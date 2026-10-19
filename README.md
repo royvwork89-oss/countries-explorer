@@ -213,7 +213,7 @@ No es necesario instalar Angular CLI de forma global: el proyecto usa su propia 
 1. Clonar el repositorio e instalar dependencias:
 
    ```bash
-   git clone <url-del-repo>
+   git clone https://github.com/royvwork89-oss/countries-explorer.git
    cd countries-explorer
    npm install
    ```
