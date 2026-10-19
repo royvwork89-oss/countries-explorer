@@ -11,6 +11,8 @@ Mini-proyecto: **Navegador de países + similares**.
 - Favoritos persistentes en el navegador.
 - Publicado en Firebase Hosting.
 
+**Elecciones del reto:** toque personal = explicación legible de la similitud (más los favoritos); persistencia = `localStorage`; similitud con 5 rasgos (idiomas, población, subregión, superficie y región).
+
 ### Supuestos
 
 - La fuente de datos es un dataset público local en lugar de la API en vivo de REST Countries (ver "Decisiones técnicas"). Confirmado con la reclutadora antes de implementar.
@@ -72,6 +74,10 @@ Hallazgos adicionales:
 - La UI muestra "No disponible" en los campos nulos.
 - En la similitud, un rasgo faltante en cualquiera de los dos países se excluye y su peso se reparte entre los rasgos restantes. Si quedan menos de 2 rasgos comparables, el par no se considera.
 - Una población de 0 se trata como dato faltante, porque la comparación usa escala logarítmica.
+
+### Persistencia de favoritos
+
+No se usa Firestore ni Realtime Database, así que no hay colecciones, índices ni reglas. Los favoritos son una lista de códigos ISO de 3 letras guardada como JSON en `localStorage` bajo la clave `countries-explorer:favorites:v1` (el sufijo de versión permite cambiar el formato más adelante). Se valida al leer y se escribe en cada cambio.
 
 ## Estado y navegación
 
@@ -166,7 +172,7 @@ El cálculo es una función pura (`findSimilar`) que compara cinco rasgos y devu
 - **Etiquetas y roles:** el buscador tiene `<label>`; la carga usa `role="status"` y los errores `role="alert"`; el botón de favorito usa `aria-pressed` (la estrella es decorativa); el enlace activo de navegación marca `aria-current`.
 - **Imágenes:** las banderas de las tarjetas son decorativas (`alt=""`) porque el nombre está al lado; la del detalle lleva texto alternativo.
 - **Idioma e identificación:** `lang="es"` en el documento, un `h1` por pantalla y botones "Quitar" con nombre accesible completo.
-- **Contraste:** se eligieron colores oscuros sobre fondo claro, pero no se midió con una herramienta ni se probó con lector de pantalla (ver limitaciones).
+- **Contraste:** calculado con la fórmula de WCAG sobre los colores definidos. Texto principal 16.6:1, texto secundario 6.6:1, enlaces 6.4:1 y mensajes de error 6.5:1 sobre blanco, y todos superan 5.9:1 sobre el fondo gris claro (el mínimo AA es 4.5:1). El borde de los controles (buscador y botón de favorito) se oscureció a 4.7:1 para superar el 3:1 exigido a los controles de formulario; el borde de las tarjetas es decorativo, porque el texto de cada tarjeta ya identifica el enlace. No se probó con lector de pantalla.
 
 ## Uso de IA
 
@@ -176,7 +182,7 @@ El cálculo es una función pura (`findSimilar`) que compara cinco rasgos y devu
 4. **Revisión cruzada:** usé una segunda IA para auditar el plan de trabajo. Encontró ambigüedades reales en reglas y rangos de datos; acepté las correcciones y precisé dos que seguían incompletas.
 5. **Qué rechacé o reescribí:** rechacé integrar herramientas de IA dentro del proyecto (archivos de configuración para agentes), porque no se usarían y añadirían ruido. Un umbral de la IA para "población parecida" (0.90) resultó demasiado generoso al probarlo con datos reales; lo subí a 0.95. Al probar yo mismo la app detecté que el filtro de búsqueda se perdía al recargar, y lo corregimos guardándolo en la URL.
 6. **Riesgos detectados y mitigación:** exposición de llaves en el frontend y dependencia de una cuota externa (mitigado con un dataset local); datos externos mal formados (mapper defensivo y tests); contenido guardado corrupto (validación al leer favoritos); código generado que compila pero no funciona (cada bloque se probó con tests, con el build y a mano en el navegador).
-7. **Enfoque de prompts:** pedí cosas pequeñas y verificables ("una función pura con estos rasgos y pesos, con tests de casos límite"), con la política de datos faltantes definida de antemano, y revisé los resultados con datos reales (por ejemplo, México → Guatemala, Honduras, Nicaragua) antes de aceptarlos.
+7. **Enfoque de prompts y similitud:** la IA me ayudó a proponer los rasgos, los pesos y las plantillas de explicación de la similitud; yo fijé los criterios y validé el resultado. Pedí cosas pequeñas y verificables ("una función pura con estos rasgos y pesos, con tests de casos límite"), con la política de datos faltantes definida de antemano, y revisé los resultados con datos reales (por ejemplo, México → Guatemala, Honduras, Nicaragua) antes de aceptarlos.
 8. **Lecciones y mejoras:** las pruebas unitarias no compilan las plantillas, así que además hay que correr `npm run build`. Revisar `git status` antes de cada commit evitó repetir un primer commit con archivos de caché que hubo que limpiar. Siguientes mejoras: pruebas end-to-end, auditoría de accesibilidad con herramienta y traducción de datos (ver limitaciones).
 
 ## Limitaciones y siguientes pasos
@@ -186,7 +192,7 @@ El cálculo es una función pura (`findSimilar`) que compara cinco rasgos y devu
 - Los datos son de hace algunos años y las capitales, regiones, subregiones e idiomas aparecen en inglés, mientras que los nombres de países están en español.
 - Los pesos de la similitud son una decisión de diseño, no una verdad objetiva. Un par con solo 2 rasgos comparables puede obtener un porcentaje alto con poca evidencia.
 - Los favoritos son por navegador, no por usuario, y dos pestañas no se sincronizan hasta recargar.
-- No hay pruebas de extremo a extremo ni auditoría automática de accesibilidad; el contraste y el lector de pantalla no se verificaron.
+- No hay pruebas de extremo a extremo ni auditoría automática de accesibilidad; el contraste se calculó con la fórmula de WCAG pero no se probó con lector de pantalla.
 - No hay CSP ni cabeceras de seguridad configuradas en Hosting.
 - Las banderas dependen de un CDN externo; si cae, la tarjeta muestra una imagen rota.
 - Si se vuelve atrás dentro de la lista, el campo de búsqueda no se resincroniza con `?q=` (solo se lee al abrir la pantalla).
