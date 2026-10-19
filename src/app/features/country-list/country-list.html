@@ -27,7 +27,7 @@
         <p class="message">No hay países que coincidan con «{{ query() }}».</p>
       } @else {
         <ul class="grid">
-          @for (country of results(); track country.id) {
+          @for (country of visible(); track country.id) {
             <li>
               <a class="card" [routerLink]="['/countries', country.id]">
                 @if (country.flagUrl) {
@@ -45,6 +45,12 @@
             </li>
           }
         </ul>
+
+        @if (remaining() > 0) {
+          <button type="button" class="more" (click)="showMore()">
+            Mostrar más ({{ remaining() }} restantes)
+          </button>
+        }
       }
     }
     @default {
