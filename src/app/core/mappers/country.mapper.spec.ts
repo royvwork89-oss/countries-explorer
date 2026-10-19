@@ -23,11 +23,11 @@ describe('mapCountry', () => {
       name: 'México',
       nameEn: 'Mexico',
       capital: 'Mexico City',
-      region: 'Americas',
-      subregion: 'Central America',
+      region: 'América',
+      subregion: 'América Central',
       population: 122273473,
       area: 1964375,
-      languages: [{ code: 'spa', name: 'Spanish' }],
+      languages: [{ code: 'spa', name: 'Español' }],
       borders: ['BLZ', 'GTM', 'USA'],
       flagUrl: 'https://flags.restcountries.com/v5/w320/mx.png',
     });
@@ -56,7 +56,7 @@ describe('mapCountry', () => {
       ...complete,
       languages: [{ iso639_2: 'spa', name: 'Spanish' }, { name: 'Unknown' }, { iso639_2: 'xxx' }],
     });
-    expect(country?.languages).toEqual([{ code: 'spa', name: 'Spanish' }]);
+    expect(country?.languages).toEqual([{ code: 'spa', name: 'Español' }]);
   });
 
   it('returns empty lists when languages and borders are missing', () => {

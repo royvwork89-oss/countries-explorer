@@ -1,3 +1,4 @@
+import { translateLanguage, translateRegion, translateSubregion } from '../i18n/labels';
 import { Country, Language } from '../models/country.model';
 import { CountryRaw, CountryRawLanguage } from '../models/country-raw.model';
 
@@ -24,7 +25,7 @@ function mapLanguages(raw: CountryRawLanguage[] | null | undefined): Language[] 
     const code = cleanText(item?.iso639_2);
     const name = cleanText(item?.name);
     if (code && name) {
-      result.push({ code, name });
+      result.push({ code, name: translateLanguage(code, name) });
     }
   }
   return result;
@@ -53,8 +54,8 @@ export function mapCountry(raw: CountryRaw): Country | null {
     name: nameEs ?? nameEn,
     nameEn,
     capital: cleanText(raw.capital),
-    region: cleanText(raw.region),
-    subregion: cleanText(raw.subregion),
+    region: translateRegion(cleanText(raw.region)),
+    subregion: translateSubregion(cleanText(raw.subregion)),
     population: cleanPositiveNumber(raw.population),
     area: cleanPositiveNumber(raw.area),
     languages: mapLanguages(raw.languages),
