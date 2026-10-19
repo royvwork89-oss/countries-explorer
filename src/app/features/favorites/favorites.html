@@ -1,0 +1,43 @@
+<section class="favorites">
+  <h1>Favoritos</h1>
+
+  @switch (status()) {
+    @case ('error') {
+      <div class="message error" role="alert">
+        <p>No se pudieron cargar los países.</p>
+        <button type="button" (click)="retry()">Reintentar</button>
+      </div>
+    }
+    @case ('ready') {
+      @if (countries().length === 0) {
+        <div class="message">
+          <p>Aún no tienes países favoritos.</p>
+          <a routerLink="/">Explorar países</a>
+        </div>
+      } @else {
+        <ul class="grid">
+          @for (country of countries(); track country.id) {
+            <li class="item">
+              <a class="card" [routerLink]="['/countries', country.id]">
+                @if (country.flagUrl) {
+                  <img [src]="country.flagUrl" alt="" width="64" height="43" loading="lazy" />
+                }
+                <span class="info">
+                  <span class="name">{{ country.name }}</span>
+                  <span class="meta">Capital: {{ country.capital ?? notAvailable }}</span>
+                  <span class="meta">Población: {{ formatNumber(country.population) }}</span>
+                </span>
+              </a>
+              <button type="button" class="remove" (click)="remove(country.id)">
+                Quitar<span class="sr-only"> a {{ country.name }} de favoritos</span>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    }
+    @default {
+      <p class="message" role="status">Cargando favoritos…</p>
+    }
+  }
+</section>

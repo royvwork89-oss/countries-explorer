@@ -19,6 +19,14 @@
             @if (c.nameEn !== c.name) {
               <p class="muted">{{ c.nameEn }}</p>
             }
+            <button
+              type="button"
+              class="fav"
+              [attr.aria-pressed]="isFavorite()"
+              (click)="toggleFavorite()"
+            >
+              <span aria-hidden="true">{{ isFavorite() ? '★' : '☆' }}</span> Favorito
+            </button>
           </div>
         </header>
 
@@ -30,6 +38,34 @@
           <div><dt>Área</dt><dd>{{ formatNumber(c.area, 'km²') }}</dd></div>
           <div><dt>Idiomas</dt><dd>{{ languages() }}</dd></div>
         </dl>
+
+        <section class="similar" aria-labelledby="similar-title">
+          <h2 id="similar-title">Países similares</h2>
+          @if (similar().length > 0) {
+            <ol class="similar-list">
+              @for (item of similar(); track item.country.id) {
+                <li>
+                  <a class="similar-card" [routerLink]="['/countries', item.country.id]">
+                    @if (item.country.flagUrl) {
+                      <img [src]="item.country.flagUrl" alt="" width="48" height="32" loading="lazy" />
+                    }
+                    <span class="similar-info">
+                      <span class="similar-name">{{ item.country.name }}</span>
+                      <span class="score">{{ percent(item.score) }}% de similitud</span>
+                      <ul class="reasons">
+                        @for (reason of item.reasons; track reason) {
+                          <li>{{ reason }}</li>
+                        }
+                      </ul>
+                    </span>
+                  </a>
+                </li>
+              }
+            </ol>
+          } @else {
+            <p class="message">No hay datos suficientes para sugerir países similares.</p>
+          }
+        </section>
       } @else {
         <div class="message" role="alert">
           <h1>País no encontrado</h1>
