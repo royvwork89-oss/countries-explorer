@@ -1,10 +1,15 @@
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { CountriesDataSource } from './core/data/countries-data-source';
+import { StaticCountriesDataSource } from './core/data/static-countries.data-source';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes)
+    provideRouter(routes, withComponentInputBinding()),
+    provideHttpClient(withFetch()),
+    { provide: CountriesDataSource, useClass: StaticCountriesDataSource }
   ]
 };

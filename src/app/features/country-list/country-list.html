@@ -1,0 +1,54 @@
+<section class="list">
+  <h1>Navegador de países</h1>
+
+  <div class="search">
+    <label for="country-search">Buscar por nombre o capital</label>
+    <input
+      id="country-search"
+      type="search"
+      autocomplete="off"
+      placeholder="Ej. México, Lima, Japan"
+      [value]="query()"
+      (input)="onSearch($event)"
+    />
+  </div>
+
+  @switch (status()) {
+    @case ('error') {
+      <div class="message error" role="alert">
+        <p>No se pudieron cargar los países.</p>
+        <button type="button" (click)="retry()">Reintentar</button>
+      </div>
+    }
+    @case ('ready') {
+      <p class="count" role="status">{{ results().length }} de {{ total() }} países</p>
+
+      @if (results().length === 0) {
+        <p class="message">No hay países que coincidan con «{{ query() }}».</p>
+      } @else {
+        <ul class="grid">
+          @for (country of results(); track country.id) {
+            <li>
+              <a class="card" [routerLink]="['/countries', country.id]">
+                @if (country.flagUrl) {
+                  <img [src]="country.flagUrl" alt="" width="64" height="43" loading="lazy" />
+                } @else {
+                  <span class="flag-missing" aria-hidden="true">?</span>
+                }
+                <span class="info">
+                  <span class="name">{{ country.name }}</span>
+                  <span class="meta">Capital: {{ country.capital ?? notAvailable }}</span>
+                  <span class="meta">Región: {{ country.region ?? notAvailable }}</span>
+                  <span class="meta">Población: {{ formatNumber(country.population) }}</span>
+                </span>
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    }
+    @default {
+      <p class="message" role="status">Cargando países…</p>
+    }
+  }
+</section>

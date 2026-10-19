@@ -1,0 +1,44 @@
+<section class="detail">
+  <a class="back" routerLink="/">← Volver al listado</a>
+
+  @switch (status()) {
+    @case ('error') {
+      <div class="message error" role="alert">
+        <p>No se pudieron cargar los países.</p>
+        <button type="button" (click)="retry()">Reintentar</button>
+      </div>
+    }
+    @case ('ready') {
+      @if (country(); as c) {
+        <header class="head">
+          @if (c.flagUrl) {
+            <img [src]="c.flagUrl" [alt]="'Bandera de ' + c.name" width="160" height="107" />
+          }
+          <div>
+            <h1>{{ c.name }}</h1>
+            @if (c.nameEn !== c.name) {
+              <p class="muted">{{ c.nameEn }}</p>
+            }
+          </div>
+        </header>
+
+        <dl class="facts">
+          <div><dt>Capital</dt><dd>{{ c.capital ?? notAvailable }}</dd></div>
+          <div><dt>Región</dt><dd>{{ c.region ?? notAvailable }}</dd></div>
+          <div><dt>Subregión</dt><dd>{{ c.subregion ?? notAvailable }}</dd></div>
+          <div><dt>Población</dt><dd>{{ formatNumber(c.population) }}</dd></div>
+          <div><dt>Área</dt><dd>{{ formatNumber(c.area, 'km²') }}</dd></div>
+          <div><dt>Idiomas</dt><dd>{{ languages() }}</dd></div>
+        </dl>
+      } @else {
+        <div class="message" role="alert">
+          <h1>País no encontrado</h1>
+          <p>No existe un país con el código «{{ id() }}».</p>
+        </div>
+      }
+    }
+    @default {
+      <p class="message" role="status">Cargando país…</p>
+    }
+  }
+</section>
