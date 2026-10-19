@@ -11,7 +11,7 @@ Mini-proyecto: **Navegador de países + similares**.
 - Favoritos persistentes en el navegador.
 - Publicado en Firebase Hosting.
 
-**Elecciones del reto:** toque personal = explicación legible de la similitud (más los favoritos); persistencia = `localStorage`; similitud con 5 rasgos (idiomas, población, subregión, superficie y región).
+**Elecciones del reto:** toque personal = explicación legible de la similitud, con una mini-gráfica comparativa de población y superficie frente a los 3 similares (más los favoritos); persistencia = `localStorage`; similitud con 5 rasgos (idiomas, población, subregión, superficie y región).
 
 ### Supuestos
 
@@ -30,7 +30,7 @@ src/app/
     services/       CountriesService: carga una sola vez y expone el estado con signals
     similarity/     findSimilar(): función pura, sin dependencias de Angular
     favorites/      FavoritesRepository (contrato), versión localStorage y FavoritesService
-    utils/          formato de números y normalización de texto para la búsqueda
+    utils/          formato de números, normalización de texto para la búsqueda y escalado de las barras de la gráfica
   features/
     country-list/   lista, búsqueda y "Mostrar más"
     country-detail/ detalle, países similares y botón de favorito
@@ -170,6 +170,7 @@ El cálculo es una función pura (`findSimilar`) que compara cinco rasgos y devu
 
 - **Teclado y foco:** todo lo interactivo son enlaces y botones nativos. El foco es visible (`:focus-visible`) y hay un enlace "Saltar al contenido".
 - **Etiquetas y roles:** el buscador tiene `<label>`; la carga usa `role="status"` y los errores `role="alert"`; el botón de favorito usa `aria-pressed` (la estrella es decorativa); el enlace activo de navegación marca `aria-current`.
+- **Gráfica comparativa:** son barras HTML y CSS, sin librerías. Las barras son decorativas (`aria-hidden`) y cada valor aparece siempre como texto, así que la información no depende del color ni de la vista; el país actual se distingue también por el nombre en negrita.
 - **Imágenes:** las banderas de las tarjetas son decorativas (`alt=""`) porque el nombre está al lado; la del detalle lleva texto alternativo.
 - **Idioma e identificación:** `lang="es"` en el documento, un `h1` por pantalla y botones "Quitar" con nombre accesible completo.
 - **Contraste:** calculado con la fórmula de WCAG sobre los colores definidos. Texto principal 16.6:1, texto secundario 6.6:1, enlaces 6.4:1 y mensajes de error 6.5:1 sobre blanco, y todos superan 5.9:1 sobre el fondo gris claro (el mínimo AA es 4.5:1). El borde de los controles (buscador y botón de favorito) se oscureció a 4.7:1 para superar el 3:1 exigido a los controles de formulario; el borde de las tarjetas es decorativo, porque el texto de cada tarjeta ya identifica el enlace. No se probó con lector de pantalla.
@@ -191,6 +192,7 @@ El cálculo es una función pura (`findSimilar`) que compara cinco rasgos y devu
 
 - Los datos son de hace algunos años y las capitales, regiones, subregiones e idiomas aparecen en inglés, mientras que los nombres de países están en español.
 - Los pesos de la similitud son una decisión de diseño, no una verdad objetiva. Un par con solo 2 rasgos comparables puede obtener un porcentaje alto con poca evidencia.
+- La gráfica usa escala lineal relativa al mayor de los cuatro países; si uno es mucho mayor, las barras de los demás se ven muy cortas (se garantiza un ancho mínimo visible y el valor exacto siempre está en texto).
 - Los favoritos son por navegador, no por usuario, y dos pestañas no se sincronizan hasta recargar.
 - No hay pruebas de extremo a extremo ni auditoría automática de accesibilidad; el contraste se calculó con la fórmula de WCAG pero no se probó con lector de pantalla.
 - No hay CSP ni cabeceras de seguridad configuradas en Hosting.

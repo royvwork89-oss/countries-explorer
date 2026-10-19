@@ -66,6 +66,30 @@
             <p class="message">No hay datos suficientes para sugerir países similares.</p>
           }
         </section>
+
+        @if (charts().length > 0) {
+          <section class="compare" aria-labelledby="compare-title">
+            <h2 id="compare-title">Comparación con los similares</h2>
+            <div class="charts">
+              @for (chart of charts(); track chart.key) {
+                <figure class="chart">
+                  <figcaption>{{ chart.title }}</figcaption>
+                  <ul class="bars">
+                    @for (row of chart.rows; track row.id) {
+                      <li [class.target]="row.isTarget">
+                        <span class="bar-name">{{ row.name }}</span>
+                        <span class="bar-track" aria-hidden="true">
+                          <span class="bar-fill" [style.width.%]="row.width"></span>
+                        </span>
+                        <span class="bar-value">{{ formatNumber(row.value, chart.unit) }}</span>
+                      </li>
+                    }
+                  </ul>
+                </figure>
+              }
+            </div>
+          </section>
+        }
       } @else {
         <div class="message" role="alert">
           <h1>País no encontrado</h1>

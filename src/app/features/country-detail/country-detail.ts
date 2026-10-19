@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { FavoritesService } from '../../core/favorites/favorites.service';
 import { CountriesService } from '../../core/services/countries.service';
 import { findSimilar } from '../../core/similarity/similarity';
+import { buildBarRows } from '../../core/utils/chart';
 import { formatNumber, NOT_AVAILABLE } from '../../core/utils/format';
 
 @Component({
@@ -38,6 +39,19 @@ export class CountryDetail {
   protected readonly isFavorite = computed(() => {
     const country = this.country();
     return country !== null && this.favoritesService.has(country.id);
+  });
+
+  protected readonly charts = computed(() => {
+    const country = this.country();
+    const similar = this.similar();
+    if (!country || similar.length === 0) {
+      return [];
+    }
+    const countries = [country, ...similar.map((item) => item.country)];
+    return [
+      { key: 'population', title: 'Población', unit: undefined, rows: buildBarRows(countries, (c) => c.population) },
+      { key: 'area', title: 'Superficie', unit: 'km²', rows: buildBarRows(countries, (c) => c.area) },
+    ];
   });
 
   constructor() {
