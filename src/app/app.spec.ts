@@ -19,6 +19,14 @@ describe('App', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
+  it('moves focus to the main content from the skip link without navigating', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    root.querySelector<HTMLAnchorElement>('.skip-link')?.click();
+    expect(document.activeElement?.id).toBe('main');
+  });
+
   it('should render the header brand and the main landmark', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();

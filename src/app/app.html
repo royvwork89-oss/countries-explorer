@@ -1,4 +1,4 @@
-<a class="skip-link" href="#main">Saltar al contenido</a>
+<a class="skip-link" href="#main" (click)="skipToMain($event)">Saltar al contenido</a>
 
 <header class="app-header">
   <a class="brand" routerLink="/">Countries Explorer</a>
@@ -9,6 +9,6 @@
   </nav>
 </header>
 
-<main id="main" class="app-main">
+<main id="main" class="app-main" tabindex="-1">
   <router-outlet />
 </main>
