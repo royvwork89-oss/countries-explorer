@@ -70,6 +70,10 @@
         @if (charts().length > 0) {
           <section class="compare" aria-labelledby="compare-title">
             <h2 id="compare-title">Comparación con los similares</h2>
+            <p class="hint">
+              El país actual aparece primero, en azul y en negrita; las otras tres filas son sus
+              países similares.
+            </p>
             <div class="charts">
               @for (chart of charts(); track chart.key) {
                 <figure class="chart">
