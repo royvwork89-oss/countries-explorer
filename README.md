@@ -173,7 +173,7 @@ El cálculo es una función pura (`findSimilar`) que compara cinco rasgos y devu
 - **Gráfica comparativa:** son barras HTML y CSS, sin librerías. Las barras son decorativas (`aria-hidden`) y cada valor aparece siempre como texto, así que la información no depende del color ni de la vista; el país actual se distingue también por el nombre en negrita.
 - **Imágenes:** las banderas de las tarjetas son decorativas (`alt=""`) porque el nombre está al lado; la del detalle lleva texto alternativo.
 - **Idioma e identificación:** `lang="es"` en el documento, un `h1` por pantalla y botones "Quitar" con nombre accesible completo.
-- **Contraste:** calculado con la fórmula de WCAG sobre los colores definidos. Texto principal 16.6:1, texto secundario 6.6:1, enlaces 6.4:1 y mensajes de error 6.5:1 sobre blanco, y todos superan 5.9:1 sobre el fondo gris claro (el mínimo AA es 4.5:1). El borde de los controles (buscador y botón de favorito) se oscureció a 4.7:1 para superar el 3:1 exigido a los controles de formulario; el borde de las tarjetas es decorativo, porque el texto de cada tarjeta ya identifica el enlace. No se probó con lector de pantalla.
+- **Contraste:** calculado con la fórmula de WCAG sobre los colores definidos. Texto principal 16.6:1, texto secundario 6.6:1, enlaces 6.4:1 y mensajes de error 6.5:1 sobre blanco, y todos superan 5.5:1 sobre el fondo azul claro de la página (el mínimo AA es 4.5:1). El borde de los controles (buscador y botón de favorito) se oscureció a 4.7:1 para superar el 3:1 exigido a los controles de formulario; el borde de las tarjetas es decorativo, porque el texto de cada tarjeta ya identifica el enlace. No se probó con lector de pantalla.
 
 ## Uso de IA
 
